@@ -1,117 +1,102 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Registro</title>
-<style>
-  body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 20px; }
-  h1 { text-align: center; }
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-  th { background-color: #eee; }
-  tr:nth-child(even) { background-color: #f9f9f9; }
-  tr:nth-child(odd) { background-color: #fff; }
-  button { padding: 5px 10px; margin: 5px; cursor: pointer; }
-  select, input { padding: 5px; margin: 5px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Numeração</title>
+    <!-- Link do CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Login -->
+    <section id="login-section">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="usuario">Usuário:</label>
+            <input type="text" id="usuario" name="usuario" required>
 
-<h1>Sistema de Registro</h1>
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
 
-<!-- Seleção de Tipo de Registro e Ano -->
-<div>
-  Tipo de Registro: 
-  <select id="tipoRegistro">
-    <option>Indicações</option>
-    <!-- Outros tipos serão adicionados pelo MASTER -->
-  </select>
+            <button type="submit">Entrar</button>
+        </form>
+    </section>
 
-  Ano: 
-  <select id="anoRegistro">
-    <option>2026</option>
-    <option>2027</option>
-  </select>
+    <!-- Seleção de tipo de registro e ano -->
+    <section id="filtro-section">
+        <h2>Filtro</h2>
+        <label for="tipo-registro">Tipo de Registro:</label>
+        <select id="tipo-registro">
+            <option value="indicacoes">Indicações</option>
+            <option value="contratos">Contratos</option>
+            <option value="oficios">Ofícios</option>
+            <option value="projetos">Projetos de Lei</option>
+        </select>
 
-  <button onclick="filtrar()">Filtrar</button>
-</div>
+        <label for="ano-registro">Ano:</label>
+        <select id="ano-registro">
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+        </select>
 
-<!-- Tabela de Registros -->
-<table id="tabelaRegistros">
-  <thead>
-    <tr>
-      <th>Tipo Registro</th>
-      <th>Nº do Registro</th>
-      <th>Data/Hora</th>
-      <th>Responsável</th>
-      <th>Vereador Vinculado</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Linhas vão aparecer aqui dinamicamente -->
-  </tbody>
-</table>
+        <button id="filtrar-btn">Filtrar</button>
+    </section>
 
-<!-- Botões -->
-<div>
-  <button onclick="adicionarRegistro()">Adicionar Registro</button>
-</div>
+    <!-- Lista de registros -->
+    <section id="tabela-section">
+        <h2>Registros</h2>
+        <table id="tabela-registros">
+            <thead>
+                <tr>
+                    <th>Tipo Registro</th>
+                    <th>Nº do Registro</th>
+                    <th>Data/Hora</th>
+                    <th>Responsável</th>
+                    <th>Vereador Vinculado</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aqui o JS/PHP vai preencher os registros -->
+            </tbody>
+        </table>
+        <button id="adicionar-registro">Adicionar Registro</button>
+    </section>
 
-<script>
-// Array inicial de registros
-let registros = [];
+    <!-- Opção de exportar -->
+    <section id="export-section">
+        <h2>Exportar</h2>
+        <label for="export-format">Escolha o formato:</label>
+        <select id="export-format">
+            <option value="pdf">PDF</option>
+            <option value="excel">Excel</option>
+            <option value="word">Word</option>
+        </select>
+        <button id="export-btn">Baixar</button>
+    </section>
 
-// Função para adicionar registro (mockup)
-function adicionarRegistro() {
-  let tipo = document.getElementById('tipoRegistro').value;
-  let numero = registros.length + 1;
-  let dataHora = new Date().toLocaleString();
-  let responsavel = prompt("Digite o nome de quem vai pegar o registro:");
-  let vereador = prompt("Digite o nome do vereador (opcional):");
-  
-  registros.push({ tipo, numero, dataHora, responsavel, vereador });
-  atualizarTabela();
-}
+    <!-- Controle de usuários MASTER -->
+    <section id="usuario-master-section">
+        <h2>Controle de Usuários</h2>
+        <button id="criar-usuario">Criar Usuário</button>
+        <button id="reset-senha">Resetar Senha</button>
+        <button id="inativar-usuario">Inativar Usuário</button>
+        <table id="tabela-usuarios">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Login</th>
+                    <th>Tipo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aqui o JS/PHP vai preencher os usuários -->
+            </tbody>
+        </table>
+    </section>
 
-// Atualiza a tabela
-function atualizarTabela() {
-  let tbody = document.querySelector("#tabelaRegistros tbody");
-  tbody.innerHTML = "";
-  registros.forEach(r => {
-    let tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${r.tipo}</td>
-      <td>${r.numero}</td>
-      <td>${r.dataHora}</td>
-      <td>${r.responsavel}</td>
-      <td>${r.vereador || "-"}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// Função de filtro (mockup)
-function filtrar() {
-  let tipo = document.getElementById('tipoRegistro').value;
-  let ano = document.getElementById('anoRegistro').value;
-  let tbody = document.querySelector("#tabelaRegistros tbody");
-  tbody.innerHTML = "";
-  
-  registros.filter(r => r.tipo === tipo && r.dataHora.includes(ano))
-           .forEach(r => {
-             let tr = document.createElement("tr");
-             tr.innerHTML = `
-               <td>${r.tipo}</td>
-               <td>${r.numero}</td>
-               <td>${r.dataHora}</td>
-               <td>${r.responsavel}</td>
-               <td>${r.vereador || "-"}</td>
-             `;
-             tbody.appendChild(tr);
-           });
-}
-</script>
-
+    <!-- Script JS -->
+    <script src="script.js"></script>
 </body>
 </html>
