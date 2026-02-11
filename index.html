@@ -8,23 +8,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 </head>
 <body>
-
     <!-- Login -->
     <section id="login-section">
         <h2>Login</h2>
         <form id="login-form">
             <label for="usuario">CPF:</label>
-            <input type="text" id="usuario" name="usuario" placeholder="Digite seu CPF" required>
-
+            <input type="text" id="usuario" name="usuario" maxlength="11" required>
             <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
-
+            <input type="password" id="senha" name="senha" required>
             <button type="submit">Entrar</button>
         </form>
     </section>
 
     <!-- Filtro -->
-    <section id="filtro-section" style="display:none;">
+    <section id="filtro-section" style="display:none">
         <h2>Filtro</h2>
         <label for="tipo-registro">Tipo de Registro:</label>
         <select id="tipo-registro">
@@ -33,18 +30,16 @@
             <option value="oficios">Ofícios</option>
             <option value="projetos">Projetos de Lei</option>
         </select>
-
         <label for="ano-registro">Ano:</label>
         <select id="ano-registro">
             <option value="2026">2026</option>
             <option value="2027">2027</option>
         </select>
-
         <button id="filtrar-btn">Filtrar</button>
     </section>
 
-    <!-- Tabela de Registros -->
-    <section id="tabela-section" style="display:none;">
+    <!-- Tabela de registros -->
+    <section id="tabela-section" style="display:none">
         <h2>Registros</h2>
         <table id="tabela-registros">
             <thead>
@@ -62,8 +57,8 @@
         <button id="adicionar-registro">Adicionar Registro</button>
     </section>
 
-    <!-- Exportação -->
-    <section id="export-section" style="display:none;">
+    <!-- Exportar -->
+    <section id="export-section" style="display:none">
         <h2>Exportar</h2>
         <label for="export-format">Formato:</label>
         <select id="export-format">
@@ -75,12 +70,9 @@
     </section>
 
     <!-- Controle MASTER -->
-    <section id="usuario-master-section" style="display:none;">
+    <section id="usuario-master-section" style="display:none">
         <h2>Controle de Usuários</h2>
         <button id="criar-usuario">Criar Usuário</button>
-        <button id="reset-senha">Resetar Senha</button>
-        <button id="inativar-usuario">Inativar Usuário</button>
-
         <table id="tabela-usuarios">
             <thead>
                 <tr>
