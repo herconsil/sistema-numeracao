@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Indicações e Contratos</title>
+    <title>Sistema de Numeração</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 </head>
@@ -14,14 +14,16 @@
         <form id="login-form">
             <label for="usuario">CPF:</label>
             <input type="text" id="usuario" name="usuario" maxlength="11" required>
+
             <label for="senha">Senha:</label>
             <input type="password" id="senha" name="senha" required>
+
             <button type="submit">Entrar</button>
         </form>
     </section>
 
-    <!-- Filtro -->
-    <section id="filtro-section" style="display:none">
+    <!-- Seções do sistema -->
+    <section id="filtro-section" style="display:none;">
         <h2>Filtro</h2>
         <label for="tipo-registro">Tipo de Registro:</label>
         <select id="tipo-registro">
@@ -30,16 +32,17 @@
             <option value="oficios">Ofícios</option>
             <option value="projetos">Projetos de Lei</option>
         </select>
+
         <label for="ano-registro">Ano:</label>
         <select id="ano-registro">
             <option value="2026">2026</option>
             <option value="2027">2027</option>
         </select>
+
         <button id="filtrar-btn">Filtrar</button>
     </section>
 
-    <!-- Tabela de registros -->
-    <section id="tabela-section" style="display:none">
+    <section id="tabela-section" style="display:none;">
         <h2>Registros</h2>
         <table id="tabela-registros">
             <thead>
@@ -57,10 +60,9 @@
         <button id="adicionar-registro">Adicionar Registro</button>
     </section>
 
-    <!-- Exportar -->
-    <section id="export-section" style="display:none">
+    <section id="export-section" style="display:none;">
         <h2>Exportar</h2>
-        <label for="export-format">Formato:</label>
+        <label for="export-format">Escolha o formato:</label>
         <select id="export-format">
             <option value="pdf">PDF</option>
             <option value="excel">Excel</option>
@@ -69,10 +71,11 @@
         <button id="export-btn">Baixar</button>
     </section>
 
-    <!-- Controle MASTER -->
-    <section id="usuario-master-section" style="display:none">
+    <section id="usuario-master-section" style="display:none;">
         <h2>Controle de Usuários</h2>
         <button id="criar-usuario">Criar Usuário</button>
+        <button id="reset-senha">Resetar Senha</button>
+        <button id="inativar-usuario">Inativar Usuário</button>
         <table id="tabela-usuarios">
             <thead>
                 <tr>
