@@ -1,27 +1,38 @@
 body {
     font-family: Arial, sans-serif;
-    padding: 20px;
-    background: #f4f4f4;
+    margin: 20px;
+    background-color: #f0f2f5;
+    color: #333;
 }
 
 h2 {
-    margin-bottom: 10px;
+    margin-top: 0;
 }
 
 section {
-    background: #fff;
+    margin-bottom: 30px;
     padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 5px #ccc;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 input, select, button {
-    display: block;
-    margin-bottom: 10px;
+    margin: 5px 0 10px;
     padding: 8px;
-    width: 100%;
-    max-width: 300px;
+    font-size: 14px;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+}
+
+button:hover {
+    background-color: #0056b3;
 }
 
 table {
@@ -30,15 +41,17 @@ table {
     margin-top: 10px;
 }
 
-table, th, td {
-    border: 1px solid #ccc;
-}
-
-th, td {
+table th, table td {
+    border: 1px solid #ddd;
     padding: 8px;
-    text-align: left;
+    text-align: center;
 }
 
-tr:nth-child(even) {
+table tr:nth-child(even){
     background-color: #f9f9f9;
+}
+
+table th {
+    background-color: #007bff;
+    color: white;
 }
