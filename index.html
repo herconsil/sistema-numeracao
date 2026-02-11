@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Numeração</title>
-    <!-- Link do CSS -->
     <link rel="stylesheet" href="style.css">
     <!-- Supabase JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
@@ -24,8 +23,8 @@
         </form>
     </section>
 
-    <!-- Seleção de tipo de registro e ano -->
-    <section id="filtro-section">
+    <!-- Filtro -->
+    <section id="filtro-section" style="display:none">
         <h2>Filtro</h2>
         <label for="tipo-registro">Tipo de Registro:</label>
         <select id="tipo-registro">
@@ -44,8 +43,8 @@
         <button id="filtrar-btn">Filtrar</button>
     </section>
 
-    <!-- Lista de registros -->
-    <section id="tabela-section">
+    <!-- Tabela de registros -->
+    <section id="tabela-section" style="display:none">
         <h2>Registros</h2>
         <table id="tabela-registros">
             <thead>
@@ -58,15 +57,13 @@
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Aqui o JS vai preencher os registros -->
-            </tbody>
+            <tbody></tbody>
         </table>
         <button id="adicionar-registro">Adicionar Registro</button>
     </section>
 
-    <!-- Opção de exportar -->
-    <section id="export-section">
+    <!-- Exportação -->
+    <section id="export-section" style="display:none">
         <h2>Exportar</h2>
         <label for="export-format">Escolha o formato:</label>
         <select id="export-format">
@@ -77,8 +74,25 @@
         <button id="export-btn">Baixar</button>
     </section>
 
-    <!-- Controle de usuários MASTER -->
-    <section id="usuario-master-section">
+    <!-- Controle MASTER -->
+    <section id="usuario-master-section" style="display:none">
         <h2>Controle de Usuários</h2>
         <button id="criar-usuario">Criar Usuário</button>
-        <button id="reset-senha">
+        <button id="reset-senha">Resetar Senha</button>
+        <button id="inativar-usuario">Inativar Usuário</button>
+        <table id="tabela-usuarios">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Login</th>
+                    <th>Tipo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
