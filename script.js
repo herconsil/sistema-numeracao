@@ -10,56 +10,61 @@ const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // =====================================
 const loginForm = document.getElementById('login-form');
 let usuarioLogado = null;
+let tipoUsuario = null;
 
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const usuario = document.getElementById('usuario').value;
     const senha = document.getElementById('senha').value;
 
-    // Autenticação básica de teste (substituir por Supabase Auth real depois)
-    if (usuario && senha) {
+    // Para teste inicial: MASTER fixo
+    if (usuario === 'herconsil' && senha === '@Nicolly211293') {
         usuarioLogado = usuario;
-        alert(`Bem-vindo, ${usuario}!`);
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('filtro-section').style.display = 'block';
-        document.getElementById('tabela-section').style.display = 'block';
-        document.getElementById('export-section').style.display = 'block';
-        document.getElementById('usuario-master-section').style.display = 'block';
-        carregarRegistros();
-        carregarUsuarios();
+        tipoUsuario = 'master';
+        alert('Bem-vindo MASTER!');
     } else {
-        alert('Informe usuário e senha!');
+        usuarioLogado = usuario;
+        tipoUsuario = 'normal'; // normal ou vereador
+        alert(`Bem-vindo, ${usuario}!`);
     }
+
+    // Mostra as seções
+    document.getElementById('login-section').style.display = 'none';
+    document.getElementById('filtro-section').style.display = 'block';
+    document.getElementById('tabela-section').style.display = 'block';
+    document.getElementById('export-section').style.display = 'block';
+    if(tipoUsuario === 'master') {
+        document.getElementById('usuario-master-section').style.display = 'block';
+    }
+
+    carregarRegistros();
+    carregarUsuarios();
 });
 
 // =====================================
-// Carregar registros do Supabase
+// Carregar registros
 // =====================================
 async function carregarRegistros() {
     const { data, error } = await supabase
-        .from('registros_simples') // ou 'registros' se usar UUID + RLS
+        .from('registros')
         .select('*')
         .order('id', { ascending: true });
 
-    if (error) {
-        console.error(error);
-        alert('Erro ao carregar registros!');
-        return;
-    }
+    if(error) { console.error(error); return; }
 
     const tbody = document.querySelector('#tabela-registros tbody');
-    tbody.innerHTML = ''; // limpa tabela
+    tbody.innerHTML = '';
 
-    data.forEach(registro => {
+    data.forEach(r => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${registro.tipo_registro}</td>
-            <td>${registro.id}</td>
-            <td>${new Date(registro.data_hora).toLocaleString()}</td>
-            <td>${registro.responsavel}</td>
-            <td>${registro.vereador_vinculado || '-'}</td>
+            <td>${r.tipo_registro}</td>
+            <td>${r.id}</td>
+            <td>${new Date(r.data_hora).toLocaleString()}</td>
+            <td>${r.responsavel}</td>
+            <td>${r.vereador_vinculado || '-'}</td>
             <td>
-                <button onclick="apagarRegistro(${registro.id}, '${registro.responsavel}', '${registro.vereador_vinculado || ''}')">Apagar</button>
+                <button onclick="apagarRegistro(${r.id}, '${r.responsavel}', '${r.vereador_vinculado || ''}')">Apagar</button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -67,15 +72,14 @@ async function carregarRegistros() {
 }
 
 // =====================================
-// Adicionar novo registro
+// Adicionar registro
 // =====================================
 document.getElementById('adicionar-registro').addEventListener('click', async () => {
     const tipo = document.getElementById('tipo-registro').value;
-    const ano = document.getElementById('ano-registro').value;
     const vereador = prompt("Deseja vincular algum vereador? (Deixe em branco se não)");
 
     const { data, error } = await supabase
-        .from('registros_simples') // ou 'registros'
+        .from('registros')
         .insert([{
             tipo_registro: tipo,
             data_hora: new Date().toISOString(),
@@ -83,11 +87,7 @@ document.getElementById('adicionar-registro').addEventListener('click', async ()
             vereador_vinculado: vereador || null
         }]);
 
-    if (error) {
-        console.error(error);
-        alert('Erro ao adicionar registro!');
-        return;
-    }
+    if(error) { console.error(error); alert('Erro ao adicionar registro!'); return; }
 
     alert(`Registro adicionado! Nº do registro: ${data[0].id}`);
     carregarRegistros();
@@ -97,37 +97,33 @@ document.getElementById('adicionar-registro').addEventListener('click', async ()
 // Apagar registro
 // =====================================
 async function apagarRegistro(id, responsavel, vereador) {
-    if (usuarioLogado !== responsavel && usuarioLogado !== vereador) {
+    if(usuarioLogado !== responsavel && usuarioLogado !== vereador && tipoUsuario !== 'master') {
         alert('Você não tem permissão para apagar este registro!');
         return;
     }
 
     const confirmacao = confirm(`Deseja realmente apagar o registro Nº ${id}?`);
-    if (!confirmacao) return;
+    if(!confirmacao) return;
 
     const { error } = await supabase
-        .from('registros_simples') // ou 'registros'
+        .from('registros')
         .delete()
         .eq('id', id);
 
-    if (error) {
-        console.error(error);
-        alert('Erro ao apagar registro!');
-        return;
-    }
+    if(error) { console.error(error); alert('Erro ao apagar registro!'); return; }
 
     alert(`Registro Nº ${id} apagado!`);
     carregarRegistros();
 }
 
 // =====================================
-// Carregar usuários (simulação)
+// Carregar usuários (simulado)
 // =====================================
 function carregarUsuarios() {
     const usuarios = [
-        { nome: 'Priscila', login: 'priscila', tipo: 'normal' },
-        { nome: 'Vereador R', login: 'vereador_r', tipo: 'vereador' },
-        { nome: 'Master', login: 'master', tipo: 'master' }
+        { nome: 'Hércules', login: 'herconsil', tipo: 'master' },
+        { nome: 'João Silva', login: 'joao123', tipo: 'normal' },
+        { nome: 'Vereador R', login: 'vereador1', tipo: 'vereador' }
     ];
 
     const tbody = document.querySelector('#tabela-usuarios tbody');
@@ -153,5 +149,5 @@ function carregarUsuarios() {
 // =====================================
 document.getElementById('export-btn').addEventListener('click', () => {
     const formato = document.getElementById('export-format').value;
-    alert(`Exportando registros em ${formato.toUpperCase()} (funcionalidade ainda precisa ser implementada)`);
+    alert(`Exportando registros em ${formato.toUpperCase()} (simulação)`);
 });
