@@ -6,53 +6,23 @@ const SUPABASE_ANON_KEY = 'sb_publishable_bt0nsjFqqAIa3xBtGtmnDg_aLHCz-Ak';
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // =====================================
-// Login real usando tabela public.usuarios
+// Login automático para teste
 // =====================================
-const loginForm = document.getElementById('login-form');
-let usuarioLogado = null;
-let tipoUsuario = null;
+let usuarioLogado = '02746895293'; // CPF do master
+const senhaLogada = '@Nicolly211293'; // senha só pra referência
 
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+alert(`Bem-vindo, usuário de teste ${usuarioLogado}!`);
+document.getElementById('login-section').style.display = 'none';
+document.getElementById('filtro-section').style.display = 'block';
+document.getElementById('tabela-section').style.display = 'block';
+document.getElementById('export-section').style.display = 'block';
+document.getElementById('usuario-master-section').style.display = 'block';
 
-    const cpf = document.getElementById('usuario').value;
-    const senha = document.getElementById('senha').value;
-
-    const { data, error } = await supabase
-        .from('usuarios')
-        .select('*')
-        .eq('cpf', cpf)
-        .eq('senha', senha)
-        .limit(1);
-
-    if (error) {
-        console.error(error);
-        alert('Erro ao tentar logar!');
-        return;
-    }
-
-    if (data.length === 0) {
-        alert('CPF ou senha incorretos!');
-        return;
-    }
-
-    usuarioLogado = data[0].cpf;
-    tipoUsuario = data[0].tipo;
-    alert(`Bem-vindo, ${usuarioLogado}! Tipo: ${tipoUsuario}`);
-
-    // Mostrar as seções conforme tipo
-    document.getElementById('login-section').style.display = 'none';
-    document.getElementById('filtro-section').style.display = 'block';
-    document.getElementById('tabela-section').style.display = 'block';
-    document.getElementById('export-section').style.display = 'block';
-    document.getElementById('usuario-master-section').style.display = tipoUsuario === 'master' ? 'block' : 'none';
-
-    carregarRegistros();
-    carregarUsuarios();
-});
+carregarRegistros();
+carregarUsuarios();
 
 // =====================================
-// Carregar registros da tabela public.registros
+// Função para carregar registros
 // =====================================
 async function carregarRegistros() {
     const { data, error } = await supabase
@@ -66,7 +36,7 @@ async function carregarRegistros() {
     }
 
     const tbody = document.querySelector('#tabela-registros tbody');
-    tbody.innerHTML = '';
+    tbody.innerHTML = ''; // limpa tabela
 
     data.forEach(registro => {
         const tr = document.createElement('tr');
@@ -77,7 +47,7 @@ async function carregarRegistros() {
             <td>${registro.responsavel}</td>
             <td>${registro.vereador_vinculado || '-'}</td>
             <td>
-                <button onclick="apagarRegistro(${registro.id}, '${registro.responsavel}', '${registro.vereador_vinculado || ''}')">Apagar</button>
+                <button onclick="apagarRegistro('${registro.id}', '${registro.responsavel}', '${registro.vereador_vinculado || ''}')">Apagar</button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -85,12 +55,12 @@ async function carregarRegistros() {
 }
 
 // =====================================
-// Adicionar registro
+// Função para adicionar registro
 // =====================================
 document.getElementById('adicionar-registro').addEventListener('click', async () => {
     const tipo = document.getElementById('tipo-registro').value;
     const ano = document.getElementById('ano-registro').value;
-    const vereador = prompt("Deseja vincular algum vereador? (CPF, deixe em branco se não)");
+    const vereador = prompt("Deseja vincular algum vereador? (Deixe em branco se não)");
 
     const { data, error } = await supabase
         .from('registros')
@@ -112,11 +82,10 @@ document.getElementById('adicionar-registro').addEventListener('click', async ()
 });
 
 // =====================================
-// Apagar registro
+// Função para apagar registro
 // =====================================
 async function apagarRegistro(id, responsavel, vereador) {
-    // Usuário só pode apagar se for ele mesmo ou vinculado
-    if (usuarioLogado !== responsavel && usuarioLogado !== vereador && tipoUsuario !== 'master') {
+    if (usuarioLogado !== responsavel && usuarioLogado !== vereador) {
         alert('Você não tem permissão para apagar este registro!');
         return;
     }
@@ -140,80 +109,31 @@ async function apagarRegistro(id, responsavel, vereador) {
 }
 
 // =====================================
-// Carregar usuários (somente MASTER)
- // =====================================
+// Função para carregar usuários (simulação)
+// =====================================
 function carregarUsuarios() {
-    if (tipoUsuario !== 'master') return;
+    const usuarios = [
+        { nome: 'Hércules', login: '02746895293', tipo: 'master' },
+        { nome: 'João Silva', login: '12345678901', tipo: 'normal' },
+        { nome: 'Vereador R', login: '11122233344', tipo: 'vereador' }
+    ];
 
-    supabase
-        .from('usuarios')
-        .select('*')
-        .then(({ data, error }) => {
-            if (error) {
-                console.error(error);
-                return;
-            }
-
-            const tbody = document.querySelector('#tabela-usuarios tbody');
-            tbody.innerHTML = '';
-            data.forEach(u => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${u.cpf}</td>
-                    <td>${u.senha}</td>
-                    <td>${u.tipo}</td>
-                    <td>
-                        <button onclick="resetSenha('${u.cpf}')">Resetar</button>
-                        <button onclick="inativarUsuario('${u.cpf}')">Inativar</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        });
-}
-
-// =====================================
-// Resetar senha MASTER (simulado)
-// =====================================
-function resetSenha(cpf) {
-    const novaSenha = prompt(`Nova senha para ${cpf}:`);
-    if (!novaSenha) return;
-
-    supabase
-        .from('usuarios')
-        .update({ senha: novaSenha })
-        .eq('cpf', cpf)
-        .then(({ error }) => {
-            if (error) {
-                alert('Erro ao resetar senha');
-                console.error(error);
-            } else {
-                alert(`Senha de ${cpf} alterada!`);
-                carregarUsuarios();
-            }
-        });
-}
-
-// =====================================
-// Inativar usuário MASTER (simulado)
-// =====================================
-function inativarUsuario(cpf) {
-    const confirmacao = confirm(`Deseja inativar ${cpf}?`);
-    if (!confirmacao) return;
-
-    supabase
-        .from('usuarios')
-        .delete()
-        .eq('cpf', cpf)
-        .then(({ error }) => {
-            if (error) {
-                alert('Erro ao inativar usuário');
-                console.error(error);
-            } else {
-                alert(`${cpf} inativado!`);
-                carregarUsuarios();
-            }
-        });
+    const tbody = document.querySelector('#tabela-usuarios tbody');
+    tbody.innerHTML = '';
+    usuarios.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${u.nome}</td>
+            <td>${u.login}</td>
+            <td>${u.tipo}</td>
+            <td>
+                <button>Editar</button>
+                <button>Resetar Senha</button>
+                <button>Inativar</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
 // =====================================
