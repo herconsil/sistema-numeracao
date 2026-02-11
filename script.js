@@ -1,135 +1,165 @@
 // =====================================
 // Configuração Supabase
 // =====================================
-const SUPABASE_URL = 'https://SEU-SUPABASE-URL';
-const SUPABASE_ANON_KEY = 'SUA-CHAVE-ANON';
+const SUPABASE_URL = 'https://ktrsifglbkhntameaqnp.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_bt0nsjFqqAIa3xBtGtmnDg_aLHCz-Ak';
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let usuarioLogado = null;
-let tipoUsuario = null;
 
 // =====================================
 // Login
 // =====================================
-document.getElementById('login-form').addEventListener('submit', async (e)=>{
+const loginForm = document.getElementById('login-form');
+loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const cpf = document.getElementById('usuario').value;
+    const usuario = document.getElementById('usuario').value;
     const senha = document.getElementById('senha').value;
 
-    const { data: user, error } = await supabase
+    const { data, error } = await supabase
         .from('usuarios')
         .select('*')
-        .eq('cpf', cpf)
+        .eq('cpf', usuario)
         .eq('senha', senha)
         .single();
 
-    if(error || !user){
-        alert('CPF ou senha incorretos!');
+    if (error || !data) {
+        alert('CPF ou senha inválidos!');
         return;
     }
 
-    usuarioLogado = cpf;
-    tipoUsuario = user.tipo;
+    usuarioLogado = data.cpf;
+    alert(`Bem-vindo, ${usuarioLogado}! Tipo: ${data.tipo}`);
 
-    alert(`Bem-vindo, ${usuarioLogado}! Tipo: ${tipoUsuario}`);
-
+    // mostrar as seções
     document.getElementById('login-section').style.display = 'none';
     document.getElementById('filtro-section').style.display = 'block';
     document.getElementById('tabela-section').style.display = 'block';
     document.getElementById('export-section').style.display = 'block';
-    if(tipoUsuario==='master') document.getElementById('usuario-master-section').style.display='block';
+    if (data.tipo.toLowerCase() === 'master') {
+        document.getElementById('usuario-master-section').style.display = 'block';
+    }
 
     carregarRegistros();
-    if(tipoUsuario==='master') carregarUsuarios();
+    carregarUsuarios();
 });
 
 // =====================================
-// Carregar registros
+// Funções de Registros
 // =====================================
-async function carregarRegistros(){
+async function carregarRegistros() {
     const { data, error } = await supabase
         .from('registros')
         .select('*')
-        .order('id',{ascending:true});
+        .order('id', { ascending: true });
 
-    if(error) { console.error(error); return; }
+    if (error) {
+        console.error(error);
+        return;
+    }
 
     const tbody = document.querySelector('#tabela-registros tbody');
-    tbody.innerHTML='';
+    tbody.innerHTML = '';
 
-    data.forEach(reg=>{
-        const tr=document.createElement('tr');
-        tr.innerHTML=`
-            <td>${reg.tipo_registro}</td>
-            <td>${reg.id}</td>
-            <td>${new Date(reg.data_hora).toLocaleString()}</td>
-            <td>${reg.responsavel}</td>
-            <td>${reg.vereador_vinculado || '-'}</td>
-            <td><button onclick="apagarRegistro('${reg.id}','${reg.responsavel}','${reg.vereador_vinculado||''}')">Apagar</button></td>
+    data.forEach(registro => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${registro.tipo_registro}</td>
+            <td>${registro.id}</td>
+            <td>${new Date(registro.data_hora).toLocaleString()}</td>
+            <td>${registro.responsavel}</td>
+            <td>${registro.vereador_vinculado || '-'}</td>
+            <td>
+                <button onclick="apagarRegistro(${registro.id}, '${registro.responsavel}', '${registro.vereador_vinculado || ''}')">Apagar</button>
+            </td>
         `;
         tbody.appendChild(tr);
     });
 }
 
-// =====================================
-// Adicionar registro
-// =====================================
-document.getElementById('adicionar-registro').addEventListener('click', async ()=>{
+document.getElementById('adicionar-registro').addEventListener('click', async () => {
     const tipo = document.getElementById('tipo-registro').value;
-    const vereador = prompt("CPF do vereador (opcional):");
+    const ano = document.getElementById('ano-registro').value;
+    const vereador = prompt("Deseja vincular algum vereador? (Deixe em branco se não)");
 
     const { data, error } = await supabase
         .from('registros')
-        .insert([{tipo_registro:tipo, data_hora:new Date().toISOString(), responsavel:usuarioLogado, vereador_vinculado:vereador || null}]);
+        .insert([{
+            tipo_registro: tipo,
+            data_hora: new Date().toISOString(),
+            responsavel: usuarioLogado,
+            vereador_vinculado: vereador || null
+        }]);
 
-    if(error){ console.error(error); alert('Erro ao adicionar registro!'); return; }
+    if (error) {
+        console.error(error);
+        alert('Erro ao adicionar registro!');
+        return;
+    }
 
-    alert(`Registro adicionado! Nº: ${data[0].id}`);
+    alert(`Registro adicionado! Nº do registro: ${data[0].id}`);
     carregarRegistros();
 });
 
-// =====================================
-// Apagar registro
-// =====================================
-async function apagarRegistro(id, responsavel, vereador){
-    if(usuarioLogado!==responsavel && usuarioLogado!==vereador && tipoUsuario!=='master'){
-        alert('Você não tem permissão!');
+async function apagarRegistro(id, responsavel, vereador) {
+    if (usuarioLogado !== responsavel && usuarioLogado !== vereador) {
+        alert('Você não tem permissão para apagar este registro!');
         return;
     }
-    if(!confirm(`Deseja apagar registro Nº ${id}?`)) return;
 
-    const { error } = await supabase.from('registros').delete().eq('id',id);
-    if(error){ console.error(error); alert('Erro ao apagar registro!'); return; }
+    const confirmacao = confirm(`Deseja realmente apagar o registro Nº ${id}?`);
+    if (!confirmacao) return;
+
+    const { error } = await supabase
+        .from('registros')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        console.error(error);
+        alert('Erro ao apagar registro!');
+        return;
+    }
 
     alert(`Registro Nº ${id} apagado!`);
     carregarRegistros();
 }
 
 // =====================================
-// Carregar usuários (master)
-function carregarUsuarios(){
-    const tbody=document.querySelector('#tabela-usuarios tbody');
-    tbody.innerHTML='';
+// Funções de Usuários
+// =====================================
+async function carregarUsuarios() {
+    const { data, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .order('cpf', { ascending: true });
 
-    supabase.from('usuarios').select('*').then(({data,error})=>{
-        if(error) return console.error(error);
-        data.forEach(u=>{
-            const tr=document.createElement('tr');
-            tr.innerHTML=`
-                <td>${u.cpf}</td>
-                <td>${u.tipo}</td>
-                <td>
-                    <button onclick="resetSenha('${u.cpf}')">Resetar</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    const tbody = document.querySelector('#tabela-usuarios tbody');
+    tbody.innerHTML = '';
+    data.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${u.cpf}</td>
+            <td>${u.tipo}</td>
+            <td>
+                <button>Editar</button>
+                <button>Resetar Senha</button>
+                <button>Inativar</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
     });
 }
 
 // =====================================
-// Exportar (simulação)
-document.getElementById('export-btn').addEventListener('click',()=>{
+// Exportação (simulação)
+// =====================================
+document.getElementById('export-btn').addEventListener('click', () => {
     const formato = document.getElementById('export-format').value;
-    alert(`Exportando em ${formato.toUpperCase()} (simulação)`);
+    alert(`Exportando registros em ${formato.toUpperCase()} (funcionalidade ainda precisa ser implementada)`);
 });
