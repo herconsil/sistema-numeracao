@@ -8,89 +8,88 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 </head>
 <body>
-    <!-- Login -->
-    <section id="login-section">
-        <h2>Login</h2>
-        <form id="login-form">
-            <label for="usuario">CPF:</label>
-            <input type="text" id="usuario" name="usuario" placeholder="Digite seu CPF" required>
 
-            <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+<!-- Login -->
+<section id="login-section">
+    <h2>Login</h2>
+    <form id="login-form">
+        <label for="usuario">CPF:</label>
+        <input type="text" id="usuario" name="usuario" placeholder="Digite seu CPF" required>
 
-            <button type="submit">Entrar</button>
-        </form>
-    </section>
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
 
-    <!-- Filtro de registros -->
-    <section id="filtro-section" style="display:none;">
-        <h2>Filtro</h2>
-        <label for="tipo-registro">Tipo de Registro:</label>
-        <select id="tipo-registro">
-            <option value="indicacoes">Indicações</option>
-            <option value="contratos">Contratos</option>
-            <option value="oficios">Ofícios</option>
-            <option value="projetos">Projetos de Lei</option>
-        </select>
+        <button type="submit">Entrar</button>
+    </form>
+</section>
 
-        <label for="ano-registro">Ano:</label>
-        <select id="ano-registro">
-            <option value="2026">2026</option>
-            <option value="2027">2027</option>
-        </select>
+<!-- Filtro de registros -->
+<section id="filtro-section" style="display:none;">
+    <h2>Filtro</h2>
+    <label for="tipo-registro">Tipo de Registro:</label>
+    <select id="tipo-registro">
+        <option value="Indicacoes">Indicações</option>
+        <option value="Contratos">Contratos</option>
+        <option value="Oficios">Ofícios</option>
+        <option value="Projetos">Projetos de Lei</option>
+    </select>
 
-        <button id="filtrar-btn">Filtrar</button>
-    </section>
+    <label for="ano-registro">Ano:</label>
+    <select id="ano-registro">
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
+    </select>
 
-    <!-- Lista de registros -->
-    <section id="tabela-section" style="display:none;">
-        <h2>Registros</h2>
-        <table id="tabela-registros">
-            <thead>
-                <tr>
-                    <th>Tipo Registro</th>
-                    <th>Nº do Registro</th>
-                    <th>Data/Hora</th>
-                    <th>Responsável</th>
-                    <th>Vereador Vinculado</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <button id="adicionar-registro">Adicionar Registro</button>
-    </section>
+    <button id="filtrar-btn">Filtrar</button>
+</section>
 
-    <!-- Exportação -->
-    <section id="export-section" style="display:none;">
-        <h2>Exportar</h2>
-        <label for="export-format">Escolha o formato:</label>
-        <select id="export-format">
-            <option value="pdf">PDF</option>
-            <option value="excel">Excel</option>
-            <option value="word">Word</option>
-        </select>
-        <button id="export-btn">Baixar</button>
-    </section>
+<!-- Tabela de registros -->
+<section id="tabela-section" style="display:none;">
+    <h2>Registros</h2>
+    <table id="tabela-registros">
+        <thead>
+            <tr>
+                <th>Tipo Registro</th>
+                <th>Nº do Registro</th>
+                <th>Data/Hora</th>
+                <th>Responsável</th>
+                <th>Vereador Vinculado</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <button id="adicionar-registro">Adicionar Registro</button>
+</section>
 
-    <!-- Controle de usuários master -->
-    <section id="usuario-master-section" style="display:none;">
-        <h2>Controle de Usuários</h2>
-        <button id="criar-usuario">Criar Usuário</button>
-        <button id="reset-senha">Resetar Senha</button>
-        <button id="inativar-usuario">Inativar Usuário</button>
-        <table id="tabela-usuarios">
-            <thead>
-                <tr>
-                    <th>CPF</th>
-                    <th>Tipo</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </section>
+<!-- Exportar -->
+<section id="export-section" style="display:none;">
+    <h2>Exportar</h2>
+    <label for="export-format">Escolha o formato:</label>
+    <select id="export-format">
+        <option value="pdf">PDF</option>
+        <option value="excel">Excel</option>
+        <option value="word">Word</option>
+    </select>
+    <button id="export-btn">Baixar</button>
+</section>
 
-    <script src="script.js"></script>
+<!-- Controle de usuários (Master) -->
+<section id="usuario-master-section" style="display:none;">
+    <h2>Controle de Usuários</h2>
+    <table id="tabela-usuarios">
+        <thead>
+            <tr>
+                <th>CPF</th>
+                <th>Senha</th>
+                <th>Tipo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</section>
+
+<script src="script.js"></script>
 </body>
 </html>
