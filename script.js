@@ -16,8 +16,7 @@ loginForm.addEventListener('submit', async (e) => {
     const usuario = document.getElementById('usuario').value;
     const senha = document.getElementById('senha').value;
 
-    // Aqui pode fazer verificação no Supabase (autenticação real)
-    // Por enquanto é teste simples
+    // Autenticação básica de teste (substituir por Supabase Auth real depois)
     if (usuario && senha) {
         usuarioLogado = usuario;
         alert(`Bem-vindo, ${usuario}!`);
@@ -34,16 +33,17 @@ loginForm.addEventListener('submit', async (e) => {
 });
 
 // =====================================
-// Função para carregar registros
+// Carregar registros do Supabase
 // =====================================
 async function carregarRegistros() {
     const { data, error } = await supabase
-        .from('registros')
+        .from('registros_simples') // ou 'registros' se usar UUID + RLS
         .select('*')
         .order('id', { ascending: true });
 
     if (error) {
         console.error(error);
+        alert('Erro ao carregar registros!');
         return;
     }
 
@@ -67,7 +67,7 @@ async function carregarRegistros() {
 }
 
 // =====================================
-// Função para adicionar registro
+// Adicionar novo registro
 // =====================================
 document.getElementById('adicionar-registro').addEventListener('click', async () => {
     const tipo = document.getElementById('tipo-registro').value;
@@ -75,7 +75,7 @@ document.getElementById('adicionar-registro').addEventListener('click', async ()
     const vereador = prompt("Deseja vincular algum vereador? (Deixe em branco se não)");
 
     const { data, error } = await supabase
-        .from('registros')
+        .from('registros_simples') // ou 'registros'
         .insert([{
             tipo_registro: tipo,
             data_hora: new Date().toISOString(),
@@ -94,10 +94,9 @@ document.getElementById('adicionar-registro').addEventListener('click', async ()
 });
 
 // =====================================
-// Função para apagar registro
+// Apagar registro
 // =====================================
 async function apagarRegistro(id, responsavel, vereador) {
-    // Usuário só pode apagar se for ele mesmo ou vinculado ao vereador dele
     if (usuarioLogado !== responsavel && usuarioLogado !== vereador) {
         alert('Você não tem permissão para apagar este registro!');
         return;
@@ -107,7 +106,7 @@ async function apagarRegistro(id, responsavel, vereador) {
     if (!confirmacao) return;
 
     const { error } = await supabase
-        .from('registros')
+        .from('registros_simples') // ou 'registros'
         .delete()
         .eq('id', id);
 
@@ -122,7 +121,7 @@ async function apagarRegistro(id, responsavel, vereador) {
 }
 
 // =====================================
-// Função para carregar usuários (simulação)
+// Carregar usuários (simulação)
 // =====================================
 function carregarUsuarios() {
     const usuarios = [
@@ -156,4 +155,3 @@ document.getElementById('export-btn').addEventListener('click', () => {
     const formato = document.getElementById('export-format').value;
     alert(`Exportando registros em ${formato.toUpperCase()} (funcionalidade ainda precisa ser implementada)`);
 });
-
