@@ -1,34 +1,50 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f0f2f5;
-    color: #333;
+    background-color: #f4f4f4;
+    padding: 20px;
 }
 
 h2 {
-    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
 }
 
 section {
     margin-bottom: 30px;
+    background-color: #fff;
     padding: 15px;
-    background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-input, select, button {
-    margin: 5px 0 10px;
+form label, select, input {
+    display: block;
+    margin-top: 10px;
+}
+
+select, input {
+    width: 100%;
     padding: 8px;
-    font-size: 14px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 }
 
 button {
-    cursor: pointer;
+    margin-top: 15px;
+    padding: 10px 15px;
     border: none;
-    border-radius: 4px;
     background-color: #007bff;
     color: white;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 button:hover {
@@ -41,17 +57,21 @@ table {
     margin-top: 10px;
 }
 
-table th, table td {
-    border: 1px solid #ddd;
+th, td {
+    border: 1px solid #ccc;
     padding: 8px;
-    text-align: center;
+    text-align: left;
 }
 
-table tr:nth-child(even){
-    background-color: #f9f9f9;
-}
-
-table th {
+th {
     background-color: #007bff;
-    color: white;
+    color: #fff;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #fff;
 }
