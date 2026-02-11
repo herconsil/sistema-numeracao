@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Numeração</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Supabase JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 </head>
 <body>
@@ -13,8 +12,8 @@
     <section id="login-section">
         <h2>Login</h2>
         <form id="login-form">
-            <label for="usuario">Usuário:</label>
-            <input type="text" id="usuario" name="usuario" required>
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" name="cpf" required placeholder="Digite seu CPF">
 
             <label for="senha">Senha:</label>
             <input type="password" id="senha" name="senha" required>
@@ -23,8 +22,8 @@
         </form>
     </section>
 
-    <!-- Filtro -->
-    <section id="filtro-section" style="display:none">
+    <!-- Filtro de registros -->
+    <section id="filtro-section" style="display:none;">
         <h2>Filtro</h2>
         <label for="tipo-registro">Tipo de Registro:</label>
         <select id="tipo-registro">
@@ -44,7 +43,7 @@
     </section>
 
     <!-- Tabela de registros -->
-    <section id="tabela-section" style="display:none">
+    <section id="tabela-section" style="display:none;">
         <h2>Registros</h2>
         <table id="tabela-registros">
             <thead>
@@ -62,29 +61,13 @@
         <button id="adicionar-registro">Adicionar Registro</button>
     </section>
 
-    <!-- Exportação -->
-    <section id="export-section" style="display:none">
-        <h2>Exportar</h2>
-        <label for="export-format">Escolha o formato:</label>
-        <select id="export-format">
-            <option value="pdf">PDF</option>
-            <option value="excel">Excel</option>
-            <option value="word">Word</option>
-        </select>
-        <button id="export-btn">Baixar</button>
-    </section>
-
-    <!-- Controle MASTER -->
-    <section id="usuario-master-section" style="display:none">
+    <!-- Controle de usuários Master -->
+    <section id="usuario-master-section" style="display:none;">
         <h2>Controle de Usuários</h2>
-        <button id="criar-usuario">Criar Usuário</button>
-        <button id="reset-senha">Resetar Senha</button>
-        <button id="inativar-usuario">Inativar Usuário</button>
         <table id="tabela-usuarios">
             <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th>Login</th>
+                    <th>CPF</th>
                     <th>Tipo</th>
                     <th>Ações</th>
                 </tr>
