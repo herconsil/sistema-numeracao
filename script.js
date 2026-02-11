@@ -6,23 +6,23 @@ const SUPABASE_ANON_KEY = 'sb_publishable_bt0nsjFqqAIa3xBtGtmnDg_aLHCz-Ak';
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // =====================================
-// Login automático para teste
+// Teste direto sem login
 // =====================================
-let usuarioLogado = '02746895293'; // CPF do master
-const senhaLogada = '@Nicolly211293'; // senha só pra referência
+const usuarioLogado = '02746895293'; // CPF fixo Master
 
-alert(`Bem-vindo, usuário de teste ${usuarioLogado}!`);
-document.getElementById('login-section').style.display = 'none';
-document.getElementById('filtro-section').style.display = 'block';
-document.getElementById('tabela-section').style.display = 'block';
-document.getElementById('export-section').style.display = 'block';
-document.getElementById('usuario-master-section').style.display = 'block';
+document.addEventListener('DOMContentLoaded', () => {
+    // mostra todas as seções
+    document.getElementById('filtro-section').style.display = 'block';
+    document.getElementById('tabela-section').style.display = 'block';
+    document.getElementById('export-section').style.display = 'block';
+    document.getElementById('usuario-master-section').style.display = 'block';
 
-carregarRegistros();
-carregarUsuarios();
+    carregarRegistros();
+    carregarUsuarios();
+});
 
 // =====================================
-// Função para carregar registros
+// Carregar registros
 // =====================================
 async function carregarRegistros() {
     const { data, error } = await supabase
@@ -30,13 +30,10 @@ async function carregarRegistros() {
         .select('*')
         .order('id', { ascending: true });
 
-    if (error) {
-        console.error(error);
-        return;
-    }
+    if (error) return console.error(error);
 
     const tbody = document.querySelector('#tabela-registros tbody');
-    tbody.innerHTML = ''; // limpa tabela
+    tbody.innerHTML = '';
 
     data.forEach(registro => {
         const tr = document.createElement('tr');
@@ -47,7 +44,7 @@ async function carregarRegistros() {
             <td>${registro.responsavel}</td>
             <td>${registro.vereador_vinculado || '-'}</td>
             <td>
-                <button onclick="apagarRegistro('${registro.id}', '${registro.responsavel}', '${registro.vereador_vinculado || ''}')">Apagar</button>
+                <button onclick="apagarRegistro(${registro.id}, '${registro.responsavel}', '${registro.vereador_vinculado || ''}')">Apagar</button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -55,11 +52,10 @@ async function carregarRegistros() {
 }
 
 // =====================================
-// Função para adicionar registro
+// Adicionar registro
 // =====================================
 document.getElementById('adicionar-registro').addEventListener('click', async () => {
     const tipo = document.getElementById('tipo-registro').value;
-    const ano = document.getElementById('ano-registro').value;
     const vereador = prompt("Deseja vincular algum vereador? (Deixe em branco se não)");
 
     const { data, error } = await supabase
@@ -71,23 +67,18 @@ document.getElementById('adicionar-registro').addEventListener('click', async ()
             vereador_vinculado: vereador || null
         }]);
 
-    if (error) {
-        console.error(error);
-        alert('Erro ao adicionar registro!');
-        return;
-    }
+    if (error) return alert('Erro ao adicionar registro!');
 
     alert(`Registro adicionado! Nº do registro: ${data[0].id}`);
     carregarRegistros();
 });
 
 // =====================================
-// Função para apagar registro
+// Apagar registro
 // =====================================
 async function apagarRegistro(id, responsavel, vereador) {
     if (usuarioLogado !== responsavel && usuarioLogado !== vereador) {
-        alert('Você não tem permissão para apagar este registro!');
-        return;
+        return alert('Você não tem permissão para apagar este registro!');
     }
 
     const confirmacao = confirm(`Deseja realmente apagar o registro Nº ${id}?`);
@@ -98,24 +89,17 @@ async function apagarRegistro(id, responsavel, vereador) {
         .delete()
         .eq('id', id);
 
-    if (error) {
-        console.error(error);
-        alert('Erro ao apagar registro!');
-        return;
-    }
+    if (error) return alert('Erro ao apagar registro!');
 
     alert(`Registro Nº ${id} apagado!`);
     carregarRegistros();
 }
 
 // =====================================
-// Função para carregar usuários (simulação)
-// =====================================
+// Carregar usuários (simulação)
 function carregarUsuarios() {
     const usuarios = [
-        { nome: 'Hércules', login: '02746895293', tipo: 'master' },
-        { nome: 'João Silva', login: '12345678901', tipo: 'normal' },
-        { nome: 'Vereador R', login: '11122233344', tipo: 'vereador' }
+        { nome: 'Hercules', login: '02746895293', tipo: 'Master' }
     ];
 
     const tbody = document.querySelector('#tabela-usuarios tbody');
@@ -138,7 +122,6 @@ function carregarUsuarios() {
 
 // =====================================
 // Exportar registros (simulação)
-// =====================================
 document.getElementById('export-btn').addEventListener('click', () => {
     const formato = document.getElementById('export-format').value;
     alert(`Exportando registros em ${formato.toUpperCase()} (funcionalidade ainda precisa ser implementada)`);
