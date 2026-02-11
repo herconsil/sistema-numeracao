@@ -13,16 +13,16 @@
         <h2>Login</h2>
         <form id="login-form">
             <label for="usuario">CPF:</label>
-            <input type="text" id="usuario" name="usuario" maxlength="11" required>
+            <input type="text" id="usuario" name="usuario" placeholder="Digite seu CPF" required>
 
             <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" required>
+            <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
 
             <button type="submit">Entrar</button>
         </form>
     </section>
 
-    <!-- Seções do sistema -->
+    <!-- Filtro de registros -->
     <section id="filtro-section" style="display:none;">
         <h2>Filtro</h2>
         <label for="tipo-registro">Tipo de Registro:</label>
@@ -42,6 +42,7 @@
         <button id="filtrar-btn">Filtrar</button>
     </section>
 
+    <!-- Lista de registros -->
     <section id="tabela-section" style="display:none;">
         <h2>Registros</h2>
         <table id="tabela-registros">
@@ -60,6 +61,7 @@
         <button id="adicionar-registro">Adicionar Registro</button>
     </section>
 
+    <!-- Exportação -->
     <section id="export-section" style="display:none;">
         <h2>Exportar</h2>
         <label for="export-format">Escolha o formato:</label>
@@ -71,6 +73,7 @@
         <button id="export-btn">Baixar</button>
     </section>
 
+    <!-- Controle de usuários master -->
     <section id="usuario-master-section" style="display:none;">
         <h2>Controle de Usuários</h2>
         <button id="criar-usuario">Criar Usuário</button>
