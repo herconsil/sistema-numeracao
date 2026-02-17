@@ -3,81 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Numeração - Teste</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+    <title>Teste Supabase</title>
 </head>
 <body>
-    <!-- Filtro -->
-    <section id="filtro-section">
-        <h2>Filtro</h2>
-        <label for="tipo-registro">Tipo de Registro:</label>
-        <select id="tipo-registro">
-            <option value="indicacoes">Indicações</option>
-            <option value="contratos">Contratos</option>
-            <option value="oficios">Ofícios</option>
-            <option value="projetos">Projetos de Lei</option>
-        </select>
+    <h1>Olá Mundo – Teste Supabase</h1>
 
-        <label for="ano-registro">Ano:</label>
-        <select id="ano-registro">
-            <option value="2026">2026</option>
-            <option value="2027">2027</option>
-        </select>
+    <h2>Adicionar Registro</h2>
+    <label for="tipo">Tipo:</label>
+    <input type="text" id="tipo" placeholder="Indicação, Contrato...">
+    <button id="addRegistro">Adicionar Registro</button>
 
-        <button id="filtrar-btn">Filtrar</button>
-    </section>
-
-    <!-- Tabela de registros -->
-    <section id="tabela-section">
-        <h2>Registros</h2>
-        <table id="tabela-registros">
-            <thead>
-                <tr>
-                    <th>Tipo Registro</th>
-                    <th>Nº do Registro</th>
-                    <th>Data/Hora</th>
-                    <th>Responsável</th>
-                    <th>Vereador Vinculado</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <button id="adicionar-registro">Adicionar Registro</button>
-    </section>
-
-    <!-- Exportação -->
-    <section id="export-section">
-        <h2>Exportar</h2>
-        <label for="export-format">Escolha o formato:</label>
-        <select id="export-format">
-            <option value="pdf">PDF</option>
-            <option value="excel">Excel</option>
-            <option value="word">Word</option>
-        </select>
-        <button id="export-btn">Baixar</button>
-    </section>
-
-    <!-- Controle Master -->
-    <section id="usuario-master-section">
-        <h2>Controle de Usuários</h2>
-        <button id="criar-usuario">Criar Usuário</button>
-        <button id="reset-senha">Resetar Senha</button>
-        <button id="inativar-usuario">Inativar Usuário</button>
-        <table id="tabela-usuarios">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Login (CPF)</th>
-                    <th>Tipo</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </section>
+    <h2>Registros</h2>
+    <table border="1" id="tabela">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Data/Hora</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 
     <script src="script.js"></script>
 </body>
