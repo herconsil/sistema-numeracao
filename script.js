@@ -2,127 +2,67 @@
 // Configuração Supabase
 // =====================================
 const SUPABASE_URL = 'https://ktrsifglbkhntameaqnp.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_bt0nsjFqqAIa3xBtGtmnDg_aLHCz-Ak';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt0cnNpZmdsYmtobnRhbWVhcW5wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3NjQ4NDksImV4cCI6MjA4NjM0MDg0OX0.zVNL4YNvt_rOxGBawQKK-ibWsxi4_NabCLVZ_GNOBWw';
+
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // =====================================
-// Teste direto sem login
-// =====================================
-const usuarioLogado = '02746895293'; // CPF fixo Master
-
-document.addEventListener('DOMContentLoaded', () => {
-    // mostra todas as seções
-    document.getElementById('filtro-section').style.display = 'block';
-    document.getElementById('tabela-section').style.display = 'block';
-    document.getElementById('export-section').style.display = 'block';
-    document.getElementById('usuario-master-section').style.display = 'block';
-
-    carregarRegistros();
-    carregarUsuarios();
-});
-
-// =====================================
-// Carregar registros
+// Função para carregar registros
 // =====================================
 async function carregarRegistros() {
     const { data, error } = await supabase
-        .from('registros')
+        .from('registros_simples')
         .select('*')
         .order('id', { ascending: true });
 
-    if (error) return console.error(error);
+    if (error) {
+        console.error('Erro ao carregar registros:', error);
+        return;
+    }
 
-    const tbody = document.querySelector('#tabela-registros tbody');
+    const tbody = document.querySelector('#tabela tbody');
     tbody.innerHTML = '';
 
     data.forEach(registro => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${registro.tipo_registro}</td>
             <td>${registro.id}</td>
+            <td>${registro.tipo_registro}</td>
             <td>${new Date(registro.data_hora).toLocaleString()}</td>
-            <td>${registro.responsavel}</td>
-            <td>${registro.vereador_vinculado || '-'}</td>
-            <td>
-                <button onclick="apagarRegistro(${registro.id}, '${registro.responsavel}', '${registro.vereador_vinculado || ''}')">Apagar</button>
-            </td>
         `;
         tbody.appendChild(tr);
     });
 }
 
 // =====================================
-// Adicionar registro
+// Adicionar registro simples
 // =====================================
-document.getElementById('adicionar-registro').addEventListener('click', async () => {
-    const tipo = document.getElementById('tipo-registro').value;
-    const vereador = prompt("Deseja vincular algum vereador? (Deixe em branco se não)");
-
-    const { data, error } = await supabase
-        .from('registros')
-        .insert([{
-            tipo_registro: tipo,
-            data_hora: new Date().toISOString(),
-            responsavel: usuarioLogado,
-            vereador_vinculado: vereador || null
-        }]);
-
-    if (error) return alert('Erro ao adicionar registro!');
-
-    alert(`Registro adicionado! Nº do registro: ${data[0].id}`);
-    carregarRegistros();
-});
-
-// =====================================
-// Apagar registro
-// =====================================
-async function apagarRegistro(id, responsavel, vereador) {
-    if (usuarioLogado !== responsavel && usuarioLogado !== vereador) {
-        return alert('Você não tem permissão para apagar este registro!');
+document.getElementById('addRegistro').addEventListener('click', async () => {
+    const tipo = document.getElementById('tipo').value;
+    if (!tipo) {
+        alert('Digite o tipo de registro');
+        return;
     }
 
-    const confirmacao = confirm(`Deseja realmente apagar o registro Nº ${id}?`);
-    if (!confirmacao) return;
+    const { data, error } = await supabase
+        .from('registros_simples')
+        .insert([{
+            tipo_registro: tipo,
+            data_hora: new Date().toISOString()
+        }]);
 
-    const { error } = await supabase
-        .from('registros')
-        .delete()
-        .eq('id', id);
+    if (error) {
+        console.error('Erro ao adicionar registro:', error);
+        alert('Erro ao adicionar registro!');
+        return;
+    }
 
-    if (error) return alert('Erro ao apagar registro!');
-
-    alert(`Registro Nº ${id} apagado!`);
+    alert(`Registro adicionado! ID: ${data[0].id}`);
+    document.getElementById('tipo').value = '';
     carregarRegistros();
-}
-
-// =====================================
-// Carregar usuários (simulação)
-function carregarUsuarios() {
-    const usuarios = [
-        { nome: 'Hercules', login: '02746895293', tipo: 'Master' }
-    ];
-
-    const tbody = document.querySelector('#tabela-usuarios tbody');
-    tbody.innerHTML = '';
-    usuarios.forEach(u => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${u.nome}</td>
-            <td>${u.login}</td>
-            <td>${u.tipo}</td>
-            <td>
-                <button>Editar</button>
-                <button>Resetar Senha</button>
-                <button>Inativar</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
-
-// =====================================
-// Exportar registros (simulação)
-document.getElementById('export-btn').addEventListener('click', () => {
-    const formato = document.getElementById('export-format').value;
-    alert(`Exportando registros em ${formato.toUpperCase()} (funcionalidade ainda precisa ser implementada)`);
 });
+
+// =====================================
+// Carregar registros ao abrir a página
+// =====================================
+carregarRegistros();
